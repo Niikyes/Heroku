@@ -1,13 +1,15 @@
-# Imagen base oficial de Nginx
 FROM nginx:alpine
 
-# Copiar archivos necesarios
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-COPY public/ /usr/share/nginx/html/
-COPY start.sh /start.sh
+# Elimina la configuración por defecto de Nginx
+RUN rm /etc/nginx/conf.d/default.conf
 
-# Dar permisos de ejecución al script
-RUN chmod +x /start.sh
+# Copia tu configuración personalizada
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Usar el script como punto de entrada
-CMD ["sh", "/start.sh"]
+# Copia tus archivos estáticos
+COPY index.html /usr/share/nginx/html/
+
+# Expón el puerto (aunque Heroku lo ignorará)
+EXPOSE 8080
+
+CMD ["sh", "-c", "nginx -g 'daemon off;'"]
