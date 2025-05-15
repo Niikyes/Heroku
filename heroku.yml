@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: sh -c "nginx -g 'daemon off;'"
+  web: sh -c "exec nginx -g 'daemon off;'"
