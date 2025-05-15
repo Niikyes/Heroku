@@ -1,14 +1,15 @@
-# Usa una imagen ligera de Nginx
 FROM nginx:alpine
 
-# Elimina la configuración por defecto de Nginx
-RUN rm -rf /usr/share/nginx/html/*
+# Copia la configuración de Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copia tu archivo HTML al directorio de Nginx
+# Copia los archivos estáticos (index.html, CSS, JS, etc.)
 COPY index.html /usr/share/nginx/html/
+# Si tienes más archivos, agrégalos así:
+# COPY ./css /usr/share/nginx/html/css
+# COPY ./js /usr/share/nginx/html/js
 
-# Expone el puerto 80 (puerto por defecto de Nginx)
-EXPOSE 80
+# No es necesario EXPOSE si usas Heroku (ignora el puerto aquí)
+# Heroku usará $PORT automáticamente
 
-# Comando para iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]
