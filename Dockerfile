@@ -1,15 +1,13 @@
+# Imagen base oficial de Nginx
 FROM nginx:alpine
 
-# Copia la configuración de Nginx
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copiar archivos necesarios
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY public/ /usr/share/nginx/html/
+COPY start.sh /start.sh
 
-# Copia los archivos estáticos (index.html, CSS, JS, etc.)
-COPY index.html /usr/share/nginx/html/
-# Si tienes más archivos, agrégalos así:
-# COPY ./css /usr/share/nginx/html/css
-# COPY ./js /usr/share/nginx/html/js
+# Dar permisos de ejecución al script
+RUN chmod +x /start.sh
 
-# No es necesario EXPOSE si usas Heroku (ignora el puerto aquí)
-# Heroku usará $PORT automáticamente
-
-CMD ["nginx", "-g", "daemon off;"]
+# Usar el script como punto de entrada
+CMD ["sh", "/start.sh"]
