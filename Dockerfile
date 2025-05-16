@@ -1,18 +1,16 @@
 FROM nginx:1.23-alpine
 
-# Elimina configuraciones por defecto conflictivas
+# Elimina configuraciones por defecto
 RUN rm -rf /etc/nginx/conf.d/*
 
-# Copia tu configuración personalizada
+# Copia tu configuración de Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copia tus archivos estáticos
+# Copia tu HTML
 COPY index.html /usr/share/nginx/html/
-# Si tienes más archivos:
-# COPY assets/ /usr/share/nginx/html/assets/
 
-# Expón el puerto (Heroku usará $PORT)
-EXPOSE 8080
+# Instala envsubst (para reemplazar variables)
+RUN apk add --no-cache gettext
 
-# Comando de inicio mejorado
-CMD ["sh", "-c", "exec nginx -g 'daemon off;'"]
+# Script para reemplazar $PORT y ejecutar Nginx
+CMD ["sh", "-c", "envsubst < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp && mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
