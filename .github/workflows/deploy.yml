@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '22.15.1'
 
       - name: Install dependencies
         run: npm install
@@ -24,12 +24,26 @@ jobs:
       - name: Build app
         run: npm run build || echo "No build step"
 
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Authenticate with Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+        run: |
+          echo "machine api.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" > ~/.netrc
+          echo "machine git.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> ~/.netrc
+          heroku git:remote -a distri
+
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
+          git remote remove heroku || echo "no remote to remove"
           git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/distri.git
-          git push heroku HEAD:main
+          git push heroku HEAD:main --force
+
 
 
 
