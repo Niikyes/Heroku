@@ -36,7 +36,13 @@ jobs:
           heroku git:remote -a distri
 
       - name: Deploy to Heroku
-        run: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/distri.git HEAD:main
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git config --global user.email "${{ secrets.HEROKU_EMAIL }}"
+          git config --global user.name "github-actions"
+          git push heroku main
+
 
 
 
