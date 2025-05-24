@@ -20,7 +20,7 @@ Cada vez que haces un `push` a la rama `main`, GitHub Actions:
 
 ## 🌐 Enlace de la App
 
-[https://distri.herokuapp.com](https://distri.herokuapp.com) _(actualiza si tu dominio es diferente)_
+[https://distri.herokuapp.com](https://distri.herokuapp.com) 
 
 ## 📂 Estructura
 
